@@ -1,0 +1,15 @@
+(defparameter in (open "input.txt"))
+
+(labels ((odd-sum (n)
+	   (if (= n 0)
+	       0
+	       (+ (+ 1 (* 2 (- n 1))) (odd-sum (- n 1)))))
+	 (f ()
+	   (let* ((n (read in))
+		  (k (read in))
+		  (s (read in))
+		  (residual (- s (odd-sum n)))
+		  (ans (/ residual (- k 1))))
+	     (format t "~D~%" ans))))
+  (let ((num-tc (read in)))
+    (loop for i from 1 to num-tc do (f))))
