@@ -1,0 +1,11 @@
+(defparameter in (open "input.txt"))
+
+(labels ((f ()
+	   (let* ((n (read in))
+		  (arr (make-array n)))
+	     (loop for i from 0 below n do (setf (aref arr i) (read in)))
+	     (let ((all-sum (/ (reduce '+ arr) (- n 1))))
+	       (loop for i from 0 below n do (format t "~D " (- all-sum (aref arr i))))
+	       (format t "~%")))))
+  (let ((num-tc (read in)))
+    (loop repeat num-tc do (f))))
