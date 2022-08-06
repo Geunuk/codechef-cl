@@ -1,0 +1,17 @@
+(defparameter in (open "input.txt"))
+;(defparameter in *standard-input*)
+
+(defun f ()
+  (let* ((n (read in))
+	 (x (read in))
+	 (res '()))
+    (cond ((< x n) (setf res '(-1)))
+	  (T (let ((tg (- x (1- n))))
+	       (setf res (make-array n))
+	       (setf (aref res 0) tg)
+	       (loop for num from 1 below tg for i from 1 do (setf (aref res i) num))
+	       (loop for num from (1+ tg) to n for i from tg do (setf (aref res i) num)))))
+    (format T "~{~A ~}~%" (coerce res 'list))))
+		    
+(let ((num-tc (read in)))
+  (loop repeat num-tc do (f)))
