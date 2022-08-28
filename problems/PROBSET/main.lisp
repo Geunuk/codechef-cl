@@ -1,0 +1,27 @@
+(defmacro bind-in-stream (sname fname &body body)
+  (cond ((eql '*standard-input* fname)
+	 `(let ((,sname *standard-input*))
+	    ,@body))
+	(T `(with-open-file (,sname ,fname)
+	      ,@body))))
+
+(defun check (m in)
+  (let ((mode (read in))
+	(result))
+    (loop repeat m do (push (read-char in) result))
+    (cond ((and (string= "CORRECT" mode)
+	       (some #'(lambda (x) (char= x #\0)) result)) "INVALID")
+	  ((and (string= "WRONG" mode)
+		(every #'(lambda (x) (char= x #\1)) result)) "WEAK")
+	  (T "FINE"))))
+
+(defun f (n m in)
+  (let ((result))
+    (loop repeat n do (push (check m in) result))
+    (cond ((every #'(lambda (x) (string= x "FINE")) result) "FINE")
+	  ((some #'(lambda (x) (string= x "INVALID")) result) "INVALID")
+	  (T "WEAK"))))
+
+(bind-in-stream in "input.txt"
+  (let ((num-tc (read in)))
+    (loop repeat num-tc do (format T "~a~%" (f (read in) (read in) in)))))
